@@ -3,16 +3,21 @@ import datetime
 from pymongo import MongoClient
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from dotenv import load_dotenv
 
-# ====== CONFIG ======
-API_ID = 20924129
-API_HASH = "41fa64770dfccb944a7d1397a4c4129b"
-BOT_TOKEN = "8445486785:AAFJgPiAzIvMG4lsdyBtHhccAfeS4cZVB2o"
-MONGO_URI = "mongodb+srv://emptyaddress02:emptyaddress02@knightsxbots.nf0gpri.mongodb.net/?retryWrites=true&w=majority&appName=KnightsXBots"
+# ====== LOAD ENV ======
+load_dotenv()
 
-# Sudo (Owner) details
-SUDO_ID = 6946299352
-LOGIN_CREDENTIALS = {"username": "ntt2008", "password": "232008"}
+API_ID = int(os.getenv("API_ID"))
+API_HASH = os.getenv("API_HASH")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+MONGO_URI = os.getenv("MONGO_URI")
+
+SUDO_ID = int(os.getenv("OWNER_ID"))
+LOGIN_CREDENTIALS = {
+    "username": os.getenv("LOGIN_USERNAME"),
+    "password": os.getenv("LOGIN_PASSWORD"),
+}
 
 # ====== DATABASE ======
 mongo = MongoClient(MONGO_URI)
@@ -37,14 +42,14 @@ async def start(client, message):
     )
 
     buttons = [
-        [InlineKeyboardButton("💬 Support", url="https://t.me/Nagi2308")],
-        [InlineKeyboardButton("📢 Updates", url="https://t.me/KnightsXbots")]
+        [InlineKeyboardButton("💬 Support", url="https://t.me/KnightsXBotsupport")],
+        [InlineKeyboardButton("📢 Updates", url="https://t.me/KnightsXbots")],
     ]
     await message.reply_text(
         "🚀 ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ **Nagi Support Bot**\n\n"
         "🤖 This bot helps you contact **Nagi** if he is not available on Telegram.\n"
         "📩 Use /send <message> to reach out.\n",
-        reply_markup=InlineKeyboardMarkup(buttons)
+        reply_markup=InlineKeyboardMarkup(buttons),
     )
 
 
@@ -70,7 +75,7 @@ async def send_message(client, message):
     # notify sudo
     await client.send_message(
         SUDO_ID,
-        f"📩 **New Message Received**\n\n👤 From: @{user.username or 'NoUsername'} (`{user.id}`)\n🕒 {msg_data['date']}\n💬 {text}"
+        f"📩 **New Message Received**\n\n👤 From: @{user.username or 'NoUsername'} (`{user.id}`)\n🕒 {msg_data['date']}\n💬 {text}",
     )
 
 
